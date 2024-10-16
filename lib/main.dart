@@ -32,6 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _data = "Press the button to load data";
 
   void _incrementCounter() {
     setState(() {
@@ -41,15 +42,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _fetchData() async {
     try {
-      final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1'));
+      final response = await http
+          .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1'));
       if (response.statusCode == 200) {
         setState(() {
+          _data = jsonDecode(response.body)['title'];
         });
       } else {
         setState(() {
+          _data = "Failed to load data";
         });
       }
-    } catch
+    } catch (e) {
+      setState(() {
+        _data = "Error occurred: $e";
+      });
+    }
   }
 
   @override
